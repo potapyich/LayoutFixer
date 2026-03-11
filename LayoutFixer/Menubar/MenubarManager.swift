@@ -29,7 +29,7 @@ class MenubarManager: NSObject, NSMenuDelegate {
         menu.delegate = self
 
         let enableItem = NSMenuItem(
-            title: "Enable LayoutSwitcher_CC",
+            title: "Enable LayoutFixer",
             action: #selector(toggleEnabled),
             keyEquivalent: ""
         )
@@ -59,7 +59,7 @@ class MenubarManager: NSObject, NSMenuDelegate {
         menu.addItem(.separator())
 
         let aboutItem = NSMenuItem(
-            title: "About LayoutSwitcher_CC",
+            title: "About LayoutFixer",
             action: #selector(showAbout),
             keyEquivalent: ""
         )
@@ -67,7 +67,7 @@ class MenubarManager: NSObject, NSMenuDelegate {
         menu.addItem(aboutItem)
 
         let quitItem = NSMenuItem(
-            title: "Quit LayoutSwitcher_CC",
+            title: "Quit LayoutFixer",
             action: #selector(NSApplication.terminate(_:)),
             keyEquivalent: "q"
         )

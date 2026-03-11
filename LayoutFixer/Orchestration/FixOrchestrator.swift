@@ -22,7 +22,7 @@ class FixOrchestrator {
     /// returns to the main actor before any other code can run here.
     private var isConverting = false
 
-    private let logger = Logger(subsystem: "com.yourname.LayoutSwitcherCC", category: "Orchestration")
+    private let logger = Logger(subsystem: "com.potapyich.LayoutFixer", category: "Orchestration")
 
     init(
         settings: AppSettings,

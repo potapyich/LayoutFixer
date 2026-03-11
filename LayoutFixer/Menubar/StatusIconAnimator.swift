@@ -31,7 +31,7 @@ class StatusIconAnimator {
 
     static func defaultIcon() -> NSImage {
         let cfg = NSImage.SymbolConfiguration(pointSize: 15, weight: .regular)
-        let img = NSImage(systemSymbolName: "keyboard", accessibilityDescription: "LayoutSwitcher_CC")?
+        let img = NSImage(systemSymbolName: "keyboard", accessibilityDescription: "LayoutFixer")?
             .withSymbolConfiguration(cfg)
         img?.isTemplate = true
         return img ?? NSImage()

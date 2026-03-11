@@ -436,6 +436,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = LayoutFixer/Resources/LayoutFixer.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_APP_SANDBOX = NO;
 				INFOPLIST_FILE = LayoutFixer/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -443,8 +444,9 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.yourname.LayoutSwitcherCC;
-				PRODUCT_NAME = LayoutSwitcher_CC;
+				MARKETING_VERSION = 1.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.potapyich.LayoutFixer;
+				PRODUCT_NAME = LayoutFixer;
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -516,6 +518,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = LayoutFixer/Resources/LayoutFixer.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_APP_SANDBOX = NO;
 				INFOPLIST_FILE = LayoutFixer/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -523,8 +526,9 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.yourname.LayoutSwitcherCC;
-				PRODUCT_NAME = LayoutSwitcher_CC;
+				MARKETING_VERSION = 1.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.potapyich.LayoutFixer;
+				PRODUCT_NAME = LayoutFixer;
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -541,7 +545,7 @@
 					"@loader_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.yourname.LayoutFixerTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.potapyich.LayoutFixerTests;
 				PRODUCT_MODULE_NAME = LayoutFixerTests;
 				PRODUCT_NAME = LayoutFixerTests;
 				SDKROOT = macosx;
@@ -561,7 +565,7 @@
 					"@loader_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.yourname.LayoutFixerTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.potapyich.LayoutFixerTests;
 				PRODUCT_MODULE_NAME = LayoutFixerTests;
 				PRODUCT_NAME = LayoutFixerTests;
 				SDKROOT = macosx;

@@ -10,7 +10,7 @@ class HotkeyManager {
     private var watchdogTimer: Timer?
     private var selfPtr: UnsafeMutableRawPointer?
 
-    private let logger = Logger(subsystem: "com.yourname.LayoutSwitcherCC", category: "HotkeyManager")
+    private let logger = Logger(subsystem: "com.potapyich.LayoutFixer", category: "HotkeyManager")
 
     init(settings: AppSettings, onTrigger: @escaping @MainActor () -> Void) {
         self.settings = settings

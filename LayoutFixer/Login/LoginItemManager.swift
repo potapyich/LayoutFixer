@@ -4,7 +4,7 @@ import os
 class LoginItemManager {
     static let shared = LoginItemManager()
 
-    private let logger = Logger(subsystem: "com.yourname.LayoutSwitcherCC", category: "LoginItem")
+    private let logger = Logger(subsystem: "com.potapyich.LayoutFixer", category: "LoginItem")
 
     private init() {}
 
