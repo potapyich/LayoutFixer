@@ -8,7 +8,7 @@ class StatusIconAnimator {
         self.statusItem = statusItem
     }
 
-    /// Shows the target layout's flag, blinks twice, then restores the default icon.
+    /// Shows the target layout's flag, blinks once, then restores the default icon.
     func animateSuccess(targetLayout: LayoutInfo) {
         pendingTask?.cancel()
 
@@ -16,15 +16,13 @@ class StatusIconAnimator {
         let defaultImage = Self.defaultIcon()
 
         statusItem?.button?.image = flagImage
-        schedule(after: 0.4) { [weak self] in self?.statusItem?.button?.image = defaultImage }
-        schedule(after: 0.7) { [weak self] in self?.statusItem?.button?.image = flagImage }
 
         let final = DispatchWorkItem { [weak self] in
             self?.statusItem?.button?.image = defaultImage
             self?.pendingTask = nil
         }
         pendingTask = final
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.1, execute: final)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6, execute: final)
     }
 
     // MARK: - Icon helpers
@@ -51,7 +49,5 @@ class StatusIconAnimator {
         }
     }
 
-    private func schedule(after delay: TimeInterval, block: @escaping () -> Void) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: block)
-    }
+
 }

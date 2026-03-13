@@ -21,6 +21,8 @@ class FixOrchestrator {
     /// the flag is read/written on the main actor, and each `await` suspension
     /// returns to the main actor before any other code can run here.
     private var isConverting = false
+    /// Timestamp of the last completed conversion, used to debounce rapid repeats.
+    private var lastTriggerTime: Date = .distantPast
 
     private let logger = Logger(subsystem: "com.potapyich.LayoutFixer", category: "Orchestration")
 
@@ -47,6 +49,11 @@ class FixOrchestrator {
     func trigger() async {
         guard !isConverting else {
             logger.debug("Conversion in progress — ignoring rapid hotkey press")
+            return
+        }
+        let now = Date()
+        guard now.timeIntervalSince(lastTriggerTime) > 0.5 else {
+            logger.debug("Debounce — ignoring hotkey within 500 ms of last trigger")
             return
         }
         isConverting = true
@@ -212,6 +219,7 @@ class FixOrchestrator {
     }
 
     private func feedback(pair: LayoutCycleManager.Pair) {
+        lastTriggerTime = Date()
         InputSourceManager.shared.switchTo(layoutID: pair.targetID)
         if settings.soundEnabled {
             soundPlayer.play(name: settings.soundName, volume: settings.soundVolume)

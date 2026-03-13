@@ -25,8 +25,7 @@ struct AXTextWriter {
 
         guard result == .success else { return false }
 
-        let newCaretLocation = range.location + convertedText.utf16.count
-        var newRange = CFRange(location: newCaretLocation, length: 0)
+        var newRange = CFRange(location: range.location, length: convertedText.utf16.count)
         if let axRange = AXValueCreate(.cfRange, &newRange) {
             AXUIElementSetAttributeValue(
                 element,
