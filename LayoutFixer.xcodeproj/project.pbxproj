@@ -438,7 +438,7 @@
 				CODE_SIGN_ENTITLEMENTS = LayoutFixer/Resources/LayoutFixer.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = FSU8P7Z2YW;
 				ENABLE_APP_SANDBOX = NO;
 				INFOPLIST_FILE = LayoutFixer/Resources/Info.plist;
@@ -525,7 +525,7 @@
 				CODE_SIGN_ENTITLEMENTS = LayoutFixer/Resources/LayoutFixer.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = FSU8P7Z2YW;
 				ENABLE_APP_SANDBOX = NO;
 				INFOPLIST_FILE = LayoutFixer/Resources/Info.plist;
