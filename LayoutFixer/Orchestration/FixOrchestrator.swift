@@ -61,7 +61,7 @@ class FixOrchestrator {
 
         let appName   = NSWorkspace.shared.frontmostApplication?.localizedName ?? "unknown"
         let appBundle = NSWorkspace.shared.frontmostApplication?.bundleIdentifier ?? "unknown"
-        logger.info("Hotkey triggered — app: \(appName) (\(appBundle))")
+        logger.info("Hotkey triggered — app: \(appName, privacy: .public) (\(appBundle, privacy: .public))")
 
         guard axPermission.isGranted() else {
             logger.info("AX permission not granted — skipping")
@@ -80,7 +80,8 @@ class FixOrchestrator {
         logger.info("Converting: \(pair.sourceID) → \(pair.targetID)")
 
         guard let element = axReader.focusedElement() else {
-            logger.info("No focused element — skipping")
+            logger.info("No focused element — trying clipboard fallback anyway")
+            await keyboardFallback(pair: pair)
             return
         }
 
