@@ -180,7 +180,7 @@ class FixOrchestrator {
 
         let ms = Int(Date().timeIntervalSince(t2) * 1000)
         logger.info("Fallback Phase 2: clipboard changed in \(ms)ms — last word \(word.count) chars")
-        await pasteConverted(word: word, pair: pair, savedClipboard: savedClipboard)
+        await pasteConverted(word: word, pair: pair, savedClipboard: savedClipboard, collapseSelectionOnNoChange: true)
     }
 
     /// Polls NSPasteboard.changeCount every 10 ms until it changes or the configured timeout elapses.
@@ -197,10 +197,17 @@ class FixOrchestrator {
     }
 
     private func pasteConverted(word: String, pair: LayoutCycleManager.Pair,
-                                savedClipboard: [[NSPasteboard.PasteboardType: Data]]) async {
+                                savedClipboard: [[NSPasteboard.PasteboardType: Data]],
+                                collapseSelectionOnNoChange: Bool = false) async {
         let converted = normalize(converter.convert(word, from: pair.sourceID, to: pair.targetID))
         guard converted != word else {
             logger.debug("Conversion produced no change for '\(word)' (\(pair.sourceID)→\(pair.targetID))")
+            if collapseSelectionOnNoChange {
+                // Phase 2 used ⌥⇧← to create a selection but nothing was typed to replace it.
+                // Collapse the selection so subsequent hotkey presses don't see a stale
+                // "selection (N chars)" of already-converted text → endless "no change" loop.
+                postKey(keyCode: 124, flags: []) // →
+            }
             clipboard.restoreClipboard(savedClipboard)
             return
         }

@@ -9,10 +9,6 @@ class HotkeyManager {
     private var runLoopSource: CFRunLoopSource?
     private var watchdogTimer: Timer?
     private var selfPtr: UnsafeMutableRawPointer?
-    /// Key code of the hotkey keyDown we consumed, used to swallow the matching keyUp.
-    /// Modifier flags can differ on keyUp (user may release modifiers before the key),
-    /// so we match by key code alone.
-    private var pendingKeyUpCode: UInt16?
 
     private let logger = Logger(subsystem: "com.potapyich.LayoutFixer", category: "HotkeyManager")
 
@@ -53,10 +49,7 @@ class HotkeyManager {
         let ptr = retained.toOpaque()
         selfPtr = ptr
 
-        let mask = CGEventMask(
-            (1 << CGEventType.keyDown.rawValue) |
-            (1 << CGEventType.keyUp.rawValue)
-        )
+        let mask = CGEventMask(1 << CGEventType.keyDown.rawValue)
         guard let tap = CGEvent.tapCreate(
             tap: .cgSessionEventTap,
             place: .headInsertEventTap,
@@ -124,22 +117,6 @@ class HotkeyManager {
         guard settings.isEnabled else { return Unmanaged.passRetained(event) }
 
         let keyCode = UInt16(event.getIntegerValueField(.keyboardEventKeycode))
-        let eventType = event.type
-
-        // Consume the keyUp that pairs with a consumed hotkey keyDown.
-        // Chromium/Electron webviews (e.g. Claude extension in VS Code) insert
-        // the Option+key character (e.g. ⌥Space → U+00A0 non-breaking space)
-        // on keyUp rather than keyDown, so we must swallow it here.
-        if eventType == .keyUp {
-            if let pending = pendingKeyUpCode, keyCode == pending {
-                pendingKeyUpCode = nil
-                logger.debug("Consuming keyUp for hotkey keyCode \(keyCode)")
-                return nil
-            }
-            return Unmanaged.passRetained(event)
-        }
-
-        // keyDown handling
         let hotkey = settings.hotkey
 
         let relevantFlags = event.flags.rawValue & (
@@ -156,8 +133,7 @@ class HotkeyManager {
             // the user holding the hotkey doesn't queue dozens of consecutive conversions.
             let isRepeat = event.getIntegerValueField(.keyboardEventAutorepeat) != 0
             if !isRepeat {
-                logger.debug("Hotkey matched, consuming keyDown — will also consume keyUp")
-                pendingKeyUpCode = keyCode
+                logger.debug("Hotkey matched, consuming event")
                 let trigger = onTrigger
                 DispatchQueue.main.async { trigger() }
             }

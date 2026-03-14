@@ -29,14 +29,17 @@ struct AXTextWriter {
         guard AXUIElementSetAttributeValue(element, kAXSelectedTextAttribute as CFString, convertedText as CFTypeRef) == .success
         else { return false }
 
-        // Step 3: for user-selection case, re-select the converted text so it stays highlighted.
-        // For lastWord case (selectResult: false), after kAXSelectedTextAttribute set the cursor
-        // is naturally at the end of the replacement — no additional range set needed.
-        if selectResult {
-            var newRange = CFRange(location: range.location, length: convertedText.utf16.count)
-            if let axNewRange = AXValueCreate(.cfRange, &newRange) {
-                AXUIElementSetAttributeValue(element, kAXSelectedTextRangeAttribute as CFString, axNewRange)
-            }
+        // Step 3: always reposition cursor after replacement.
+        // - selectResult=true (user had selection): re-select the converted text.
+        // - selectResult=false (lastWord): collapse to cursor at end of replacement.
+        // Explicitly collapsing is required because some webview-based inputs (e.g. VS Code
+        // extension panels) leave the replaced text selected after kAXSelectedTextAttribute
+        // write, which would make the next hotkey read the already-converted selection.
+        var cursorRange = selectResult
+            ? CFRange(location: range.location, length: convertedText.utf16.count)
+            : CFRange(location: range.location + convertedText.utf16.count, length: 0)
+        if let axCursorRange = AXValueCreate(.cfRange, &cursorRange) {
+            AXUIElementSetAttributeValue(element, kAXSelectedTextRangeAttribute as CFString, axCursorRange)
         }
 
         return true
