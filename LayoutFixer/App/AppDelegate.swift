@@ -41,6 +41,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
         self.hotkeyManager = hotkeyManager
+
+        hotkeyManager.onTapInstallFailed = {
+            let imPermission = InputMonitoringPermissionManager()
+            guard !imPermission.isGranted() else { return }
+            let alert = NSAlert()
+            alert.messageText = "Input Monitoring Permission Required"
+            alert.informativeText = "LayoutFixer needs Input Monitoring access to intercept the hotkey. Please grant access in System Settings, then relaunch the app."
+            alert.alertStyle = .warning
+            alert.addButton(withTitle: "Open System Settings")
+            alert.addButton(withTitle: "Later")
+            NSApp.activate(ignoringOtherApps: true)
+            if alert.runModal() == .alertFirstButtonReturn {
+                imPermission.openSettings()
+            }
+        }
+
         hotkeyManager.enable()
 
         LoginItemManager.shared.registerIfNeeded(settings: settings)

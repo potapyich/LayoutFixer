@@ -33,11 +33,13 @@
 		A5C5E07FD4EA65496208A517 /* DirectionDetectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC3F18C84E3AE1496A90B7A5 /* DirectionDetectorTests.swift */; };
 		AFDD7FADC4295C43E1F4FF8B /* SoundPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9C1E69B24F74B2AE953475F /* SoundPlayer.swift */; };
 		B278541C3E4AD90130B9F69F /* MenubarManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B5B60177B7067F5D88B86D /* MenubarManager.swift */; };
+		B2E4A71D6C3F08B947D5A109 /* InputMonitoringPermissionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F3C8D2E4B6091F5C7A3E28 /* InputMonitoringPermissionManager.swift */; };
 		B4C5D283956BA0B4948B8E6B /* HotkeyRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD38543F5EA00614507E4137 /* HotkeyRecorder.swift */; };
 		B8A71DE52740C0A436342B89 /* LayoutInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B90054099469406ABC7105 /* LayoutInfo.swift */; };
 		B9411FA41DCB43DD8208A4A9 /* LayoutMappingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4815D00182447F2035A095B2 /* LayoutMappingTests.swift */; };
 		BD04E29A8F139D62D634D105 /* LayoutConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A8DB784D1FEF65002BCB6D /* LayoutConverter.swift */; };
 		CFFD2E89E5440BF68A058688 /* LayoutConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A8DB784D1FEF65002BCB6D /* LayoutConverter.swift */; };
+		D4F8C025A7E1B93C60841E57 /* LogExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D7F1A059B4E826D1029F4C /* LogExporter.swift */; };
 		DB7A6DD9946DA5DBF4883E38 /* AXTextReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4B4360952911A7437015EB8 /* AXTextReader.swift */; };
 		E661DED948C260696E8E318B /* LayoutInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B90054099469406ABC7105 /* LayoutInfo.swift */; };
 /* End PBXBuildFile section */
@@ -64,9 +66,11 @@
 		8CD5CAFD282B4D50F51DBCDD /* AXTextWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AXTextWriter.swift; sourceTree = "<group>"; };
 		920EF1C86216D2FB00A0E57E /* LayoutFixerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutFixerApp.swift; sourceTree = "<group>"; };
 		9A75B491755B01823898014D /* InputSourceSwitcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputSourceSwitcher.swift; sourceTree = "<group>"; };
+		A1F3C8D2E4B6091F5C7A3E28 /* InputMonitoringPermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputMonitoringPermissionManager.swift; sourceTree = "<group>"; };
 		B4B4360952911A7437015EB8 /* AXTextReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AXTextReader.swift; sourceTree = "<group>"; };
 		B9C1E69B24F74B2AE953475F /* SoundPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundPlayer.swift; sourceTree = "<group>"; };
 		BD2E6D86CC60EAA849A3AA8D /* LayoutCycleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutCycleManager.swift; sourceTree = "<group>"; };
+		C3D7F1A059B4E826D1029F4C /* LogExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogExporter.swift; sourceTree = "<group>"; };
 		CC3F18C84E3AE1496A90B7A5 /* DirectionDetectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionDetectorTests.swift; sourceTree = "<group>"; };
 		E7C759F5F89D68049AEF7E34 /* AXPermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AXPermissionManager.swift; sourceTree = "<group>"; };
 		E90BA3406AC9B677B93A4766 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -115,6 +119,7 @@
 				FDA3EAEBD6DD032232053C31 /* Conversion */,
 				54C671A95C4185B926EF1D3F /* Hotkey */,
 				A6496028FDE1F6AB4905D549 /* Login */,
+				E5A2B94071D6F038C8194B30 /* Logging */,
 				30E00E5D5ADC60CD6B0A400D /* Menubar */,
 				1AE547DE751402D17B1FC9A0 /* Orchestration */,
 				AC8DA4F6111802180CA52D51 /* Resources */,
@@ -209,8 +214,17 @@
 				E7C759F5F89D68049AEF7E34 /* AXPermissionManager.swift */,
 				B4B4360952911A7437015EB8 /* AXTextReader.swift */,
 				8CD5CAFD282B4D50F51DBCDD /* AXTextWriter.swift */,
+				A1F3C8D2E4B6091F5C7A3E28 /* InputMonitoringPermissionManager.swift */,
 			);
 			path = Accessibility;
+			sourceTree = "<group>";
+		};
+		E5A2B94071D6F038C8194B30 /* Logging */ = {
+			isa = PBXGroup;
+			children = (
+				C3D7F1A059B4E826D1029F4C /* LogExporter.swift */,
+			);
+			path = Logging;
 			sourceTree = "<group>";
 		};
 		FDA3EAEBD6DD032232053C31 /* Conversion */ = {
@@ -344,6 +358,7 @@
 				057BBDA337F738B109F4DAA1 /* HotkeyManager.swift in Sources */,
 				B4C5D283956BA0B4948B8E6B /* HotkeyRecorder.swift in Sources */,
 				2DA7A9E318DB99964B45A4A6 /* InputSourceSwitcher.swift in Sources */,
+				B2E4A71D6C3F08B947D5A109 /* InputMonitoringPermissionManager.swift in Sources */,
 				8D19E036A58AFE3C92727531 /* LanguageOrderView.swift in Sources */,
 				CFFD2E89E5440BF68A058688 /* LayoutConverter.swift in Sources */,
 				4400C9674184A6F9D76FC575 /* LayoutCycleManager.swift in Sources */,
@@ -351,6 +366,7 @@
 				E661DED948C260696E8E318B /* LayoutInfo.swift in Sources */,
 				6BE4E05CC5D08BBB661D79E1 /* LayoutMapping.swift in Sources */,
 				4A32B4DEECAF7A7B35EA219F /* LoginItemManager.swift in Sources */,
+				D4F8C025A7E1B93C60841E57 /* LogExporter.swift in Sources */,
 				B278541C3E4AD90130B9F69F /* MenubarManager.swift in Sources */,
 				A52E59ABC3D5A8D896268981 /* SettingsView.swift in Sources */,
 				AFDD7FADC4295C43E1F4FF8B /* SoundPlayer.swift in Sources */,
@@ -438,7 +454,7 @@
 				CODE_SIGN_ENTITLEMENTS = LayoutFixer/Resources/LayoutFixer.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 106;
 				DEVELOPMENT_TEAM = FSU8P7Z2YW;
 				ENABLE_APP_SANDBOX = NO;
 				INFOPLIST_FILE = LayoutFixer/Resources/Info.plist;
@@ -448,7 +464,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0.5;
+				MARKETING_VERSION = 1.0.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.potapyich.LayoutFixer;
 				PRODUCT_NAME = LayoutFixer;
 				SDKROOT = macosx;
@@ -525,7 +541,7 @@
 				CODE_SIGN_ENTITLEMENTS = LayoutFixer/Resources/LayoutFixer.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 106;
 				DEVELOPMENT_TEAM = FSU8P7Z2YW;
 				ENABLE_APP_SANDBOX = NO;
 				INFOPLIST_FILE = LayoutFixer/Resources/Info.plist;
@@ -535,7 +551,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0.5;
+				MARKETING_VERSION = 1.0.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.potapyich.LayoutFixer;
 				PRODUCT_NAME = LayoutFixer;
 				SDKROOT = macosx;

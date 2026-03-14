@@ -56,6 +56,27 @@ class MenubarManager: NSObject, NSMenuDelegate {
         accessibilityItem.target = self
         menu.addItem(accessibilityItem)
 
+        let inputMonitoringItem = NSMenuItem(
+            title: "Input Monitoring Permissions",
+            action: #selector(openInputMonitoringSettings),
+            keyEquivalent: ""
+        )
+        inputMonitoringItem.target = self
+        menu.addItem(inputMonitoringItem)
+
+        menu.addItem(.separator())
+
+        let exportLogsItem = NSMenuItem(title: "Export Logs", action: nil, keyEquivalent: "")
+        let exportSubmenu = NSMenu(title: "Export Logs")
+        for range in LogExporter.timeRanges {
+            let item = NSMenuItem(title: range.title, action: #selector(exportLogs(_:)), keyEquivalent: "")
+            item.target = self
+            item.representedObject = range.since.map { $0 as NSDate }
+            exportSubmenu.addItem(item)
+        }
+        exportLogsItem.submenu = exportSubmenu
+        menu.addItem(exportLogsItem)
+
         menu.addItem(.separator())
 
         let aboutItem = NSMenuItem(
@@ -93,6 +114,15 @@ class MenubarManager: NSObject, NSMenuDelegate {
         if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility") {
             NSWorkspace.shared.open(url)
         }
+    }
+
+    @objc private func openInputMonitoringSettings() {
+        InputMonitoringPermissionManager().openSettings()
+    }
+
+    @objc private func exportLogs(_ sender: NSMenuItem) {
+        let since = (sender.representedObject as? NSDate) as Date?
+        LogExporter.shared.promptAndExport(since: since)
     }
 
     @objc private func showAbout() {

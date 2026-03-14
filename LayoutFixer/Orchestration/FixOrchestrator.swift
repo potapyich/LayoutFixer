@@ -59,7 +59,9 @@ class FixOrchestrator {
         isConverting = true
         defer { isConverting = false }
 
-        logger.info("Hotkey triggered")
+        let appName   = NSWorkspace.shared.frontmostApplication?.localizedName ?? "unknown"
+        let appBundle = NSWorkspace.shared.frontmostApplication?.bundleIdentifier ?? "unknown"
+        logger.info("Hotkey triggered — app: \(appName) (\(appBundle))")
 
         guard axPermission.isGranted() else {
             logger.info("AX permission not granted — skipping")
@@ -78,25 +80,31 @@ class FixOrchestrator {
         logger.info("Converting: \(pair.sourceID) → \(pair.targetID)")
 
         guard let element = axReader.focusedElement() else {
-            logger.debug("No focused element")
+            logger.info("No focused element — skipping")
             return
         }
 
         // ── AX path (native apps: TextEdit, Safari, …) ──────────────────────────
-        if let selRange = axReader.selectionRange(of: element), selRange.length > 0 {
+        let selRange = axReader.selectionRange(of: element)
+        logger.info("AX selectionRange: \(selRange.map { "loc=\($0.location) len=\($0.length)" } ?? "nil")")
+
+        if let selRange, selRange.length > 0 {
             guard let selectedText = axReader.selectedText(of: element),
                   !selectedText.isEmpty else {
+                logger.info("AX selectedText empty despite non-zero range — using fallback")
                 await keyboardFallback(pair: pair)
                 return
             }
+            logger.info("AX path: selection (\(selectedText.count) chars)")
             await finishAX(text: selectedText, range: selRange, element: element, pair: pair)
 
         } else if let (word, range) = axReader.lastWord(of: element) {
+            logger.info("AX path: lastWord (\(word.count) chars)")
             await finishAX(text: word, range: range, element: element, pair: pair)
 
         } else {
             // ── Keyboard+clipboard fallback (Electron/CEF) ─────────────────────
-            logger.debug("AX read failed, using keyboard+clipboard fallback")
+            logger.info("AX read failed — using keyboard+clipboard fallback")
             await keyboardFallback(pair: pair)
         }
     }
@@ -107,7 +115,7 @@ class FixOrchestrator {
                           element: AXUIElement, pair: LayoutCycleManager.Pair) async {
         let converted = normalize(converter.convert(text, from: pair.sourceID, to: pair.targetID))
         guard converted != text else {
-            logger.debug("Conversion produced no change — no mapping for this pair?")
+            logger.info("Conversion produced no change — text may already be in target layout")
             return
         }
 
@@ -130,33 +138,46 @@ class FixOrchestrator {
     private func keyboardFallback(pair: LayoutCycleManager.Pair) async {
         let savedClipboard = clipboard.saveClipboard()
 
-        // ── Phase 1 ────────────────────────────────────────────────────────────
+        // ── Phase 1: ⌘C — try to copy existing selection ──────────────────────
         let pre1 = NSPasteboard.general.changeCount
+        logger.info("Fallback Phase 1: posting ⌘C (changeCount=\(pre1))")
         postKey(keyCode: 8, flags: .maskCommand) // ⌘C
+        let t1 = Date()
 
-        if let word = await pollClipboard(ifChangedFrom: pre1),
-           !word.hasSuffix("\n"), !word.hasSuffix("\r") {
-            logger.debug("Keyboard fallback (selection): \(word)")
-            await pasteConverted(word: word, pair: pair, savedClipboard: savedClipboard)
-            return
+        if let word = await pollClipboard(ifChangedFrom: pre1) {
+            let ms = Int(Date().timeIntervalSince(t1) * 1000)
+            if !word.hasSuffix("\n"), !word.hasSuffix("\r") {
+                logger.info("Fallback Phase 1: clipboard changed in \(ms)ms — selection \(word.count) chars")
+                await pasteConverted(word: word, pair: pair, savedClipboard: savedClipboard)
+                return
+            }
+            logger.info("Fallback Phase 1: clipboard changed in \(ms)ms but content ends with newline — skipping to Phase 2")
+        } else {
+            let ms = Int(Date().timeIntervalSince(t1) * 1000)
+            let post1 = NSPasteboard.general.changeCount
+            logger.info("Fallback Phase 1: clipboard unchanged after \(ms)ms (changeCount still=\(post1)) — ⌘C may be blocked")
         }
 
-        // ── Phase 2 ────────────────────────────────────────────────────────────
+        // ── Phase 2: ⌥⇧← + ⌘C — select and copy the previous word ───────────
         postKey(keyCode: 123, flags: [.maskAlternate, .maskShift]) // ⌥⇧←
-        // Short fixed wait for the selection to take effect (no observable signal).
         try? await Task.sleep(nanoseconds: 60_000_000) // 60 ms
 
         let pre2 = NSPasteboard.general.changeCount
+        logger.info("Fallback Phase 2: posting ⌘C (changeCount=\(pre2))")
         postKey(keyCode: 8, flags: .maskCommand) // ⌘C
+        let t2 = Date()
 
         guard let word = await pollClipboard(ifChangedFrom: pre2), !word.isEmpty else {
-            logger.debug("Keyboard fallback: nothing to convert")
+            let ms = Int(Date().timeIntervalSince(t2) * 1000)
+            let post2 = NSPasteboard.general.changeCount
+            logger.info("Fallback Phase 2: clipboard empty/unchanged after \(ms)ms (changeCount=\(pre2)→\(post2)) — nothing to convert")
             postKey(keyCode: 124, flags: []) // ⇒ collapse ⌥⇧← selection
             clipboard.restoreClipboard(savedClipboard)
             return
         }
 
-        logger.debug("Keyboard fallback (last word): \(word)")
+        let ms = Int(Date().timeIntervalSince(t2) * 1000)
+        logger.info("Fallback Phase 2: clipboard changed in \(ms)ms — last word \(word.count) chars")
         await pasteConverted(word: word, pair: pair, savedClipboard: savedClipboard)
     }
 

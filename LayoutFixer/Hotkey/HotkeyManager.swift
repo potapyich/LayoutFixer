@@ -12,6 +12,10 @@ class HotkeyManager {
 
     private let logger = Logger(subsystem: "com.potapyich.LayoutFixer", category: "HotkeyManager")
 
+    /// Called on the main thread when `CGEvent.tapCreate` fails despite Accessibility being granted,
+    /// which typically indicates a missing Input Monitoring permission.
+    var onTapInstallFailed: (() -> Void)?
+
     init(settings: AppSettings, onTrigger: @escaping @MainActor () -> Void) {
         self.settings = settings
         self.onTrigger = onTrigger
@@ -61,6 +65,7 @@ class HotkeyManager {
             retained.release()
             selfPtr = nil
             logger.error("CGEvent.tapCreate failed — Accessibility or Input Monitoring permission missing")
+            DispatchQueue.main.async { [weak self] in self?.onTapInstallFailed?() }
             return
         }
 
