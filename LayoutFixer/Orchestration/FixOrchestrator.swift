@@ -97,11 +97,11 @@ class FixOrchestrator {
                 return
             }
             logger.info("AX path: selection (\(selectedText.count) chars)")
-            await finishAX(text: selectedText, range: selRange, element: element, pair: pair)
+            await finishAX(text: selectedText, range: selRange, element: element, pair: pair, selectResult: true)
 
         } else if let (word, range) = axReader.lastWord(of: element) {
             logger.info("AX path: lastWord (\(word.count) chars)")
-            await finishAX(text: word, range: range, element: element, pair: pair)
+            await finishAX(text: word, range: range, element: element, pair: pair, selectResult: false)
 
         } else {
             // ── Keyboard+clipboard fallback (Electron/CEF) ─────────────────────
@@ -113,14 +113,15 @@ class FixOrchestrator {
     // MARK: - AX write path
 
     private func finishAX(text: String, range: CFRange,
-                          element: AXUIElement, pair: LayoutCycleManager.Pair) async {
+                          element: AXUIElement, pair: LayoutCycleManager.Pair,
+                          selectResult: Bool) async {
         let converted = normalize(converter.convert(text, from: pair.sourceID, to: pair.targetID))
         guard converted != text else {
             logger.info("Conversion produced no change — text may already be in target layout")
             return
         }
 
-        let ok = axWriter.write(convertedText: converted, replacing: range, in: element)
+        let ok = axWriter.write(convertedText: converted, replacing: range, in: element, selectResult: selectResult)
         if !ok { clipboard.writeAndPaste(text: converted) }
 
         feedback(pair: pair)

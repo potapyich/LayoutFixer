@@ -3,7 +3,7 @@ import ApplicationServices
 struct AXTextWriter {
     private let reader = AXTextReader()
 
-    func write(convertedText: String, replacing range: CFRange, in element: AXUIElement) -> Bool {
+    func write(convertedText: String, replacing range: CFRange, in element: AXUIElement, selectResult: Bool) -> Bool {
         guard let fullText = reader.fullText(of: element) else { return false }
 
         let utf16 = fullText.utf16
@@ -25,7 +25,11 @@ struct AXTextWriter {
 
         guard result == .success else { return false }
 
-        var newRange = CFRange(location: range.location, length: convertedText.utf16.count)
+        // If user had text selected, keep the converted text selected.
+        // If it was a cursor-only position (lastWord), just place cursor at end.
+        var newRange = selectResult
+            ? CFRange(location: range.location, length: convertedText.utf16.count)
+            : CFRange(location: range.location + convertedText.utf16.count, length: 0)
         if let axRange = AXValueCreate(.cfRange, &newRange) {
             AXUIElementSetAttributeValue(
                 element,
